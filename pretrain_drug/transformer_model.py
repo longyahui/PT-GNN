@@ -103,11 +103,11 @@ class TransformerModel:
             drug_sequence = self.encoded_drug[i]
             inputs = self.get_features(drug_sequence)
             
-            x = self.moModel.encoder(inputs, adj)   #对分子图做卷积操作   [21, 128]
-            x = x[tf.newaxis]                #[1, 21, 128]
-            x = tf.layers.max_pooling1d(x, pool_size=x.shape[1].value, strides=x.shape[1].value)  #[1,1,128]
+            x = self.moModel.encoder(inputs, adj)  
+            x = x[tf.newaxis]               
+            x = tf.layers.max_pooling1d(x, pool_size=x.shape[1].value, strides=x.shape[1].value) 
             emb_drugs.append(tf.contrib.layers.flatten(x))
-        emb_drugs = tf.concat(emb_drugs, axis=0)   #[3543, 128]
+        emb_drugs = tf.concat(emb_drugs, axis=0)  
         return emb_drugs
     
     def get_features(self, sequence):
@@ -131,14 +131,14 @@ class TransformerModel:
     
     def instantiate_embeddings(self):
         """define all embeddings here"""
-        with tf.name_scope("token_embedding"):  # embedding matrix
+        with tf.name_scope("token_embedding"): 
            self.embedding_tokens = tf.get_variable("embedding", shape=[self.token_size, self.dim_embedding],initializer=tf.random_normal_initializer(stddev=0.1))     
     
-    def SimpleAttLayer(self, inputs, attention_size, time_major=False, return_alphas=False):   #inputs.size=(6375,3,64)
-        hidden_size = inputs.shape[2].value   #64
+    def SimpleAttLayer(self, inputs, attention_size, time_major=False, return_alphas=False):  
+        hidden_size = inputs.shape[2].value  
 
         # Trainable parameters
-        w_omega = tf.Variable(tf.random.normal([hidden_size, attention_size], stddev=0.1))    #attention_size=64 w_omega=[64,32]
+        w_omega = tf.Variable(tf.random.normal([hidden_size, attention_size], stddev=0.1))    
         b_omega = tf.Variable(tf.random.normal([attention_size], stddev=0.1))
         u_omega = tf.Variable(tf.random.normal([attention_size], stddev=0.1))  #u_omega=[32,]
 
