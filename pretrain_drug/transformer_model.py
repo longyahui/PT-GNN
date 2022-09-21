@@ -80,7 +80,7 @@ class TransformerModel:
        
     def inference(self):
         emb_drugs = self.embedding_drugs()  #transform token sequences to protein
-        emb_drugs = tf.nn.l2_normalize(emb_drugs, 1)   #[3543, 128]
+        emb_drugs = tf.nn.l2_normalize(emb_drugs, 1)   
            
         #embedding_proteins = self.embedding_protein
            
@@ -145,11 +145,11 @@ class TransformerModel:
         with tf.name_scope('v'):
            v = tf.tanh(tf.tensordot(inputs, w_omega, axes=1) + b_omega)  #(6375,3,32)
         # For each of the timestamps its vector of size A from `v` is reduced with `u` vector
-        vu = tf.tensordot(v, u_omega, axes=1, name='vu')  # (B,T) shape   (6375,3)
+        vu = tf.tensordot(v, u_omega, axes=1, name='vu')  
     
-        alphas = tf.nn.softmax(vu, name='alphas')         # (B,T) shape  (6375,3)    
+        alphas = tf.nn.softmax(vu, name='alphas')           
     
         # Output of (Bi-)RNN is reduced with attention vector; the result has (B,D) shape
-        output = tf.reduce_sum(inputs * tf.expand_dims(alphas, -1), 1)   #(6375,64,1)
+        output = tf.reduce_sum(inputs * tf.expand_dims(alphas, -1), 1)  
         #print("output:", output)
         return output        
